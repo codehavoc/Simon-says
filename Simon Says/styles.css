@@ -1,0 +1,99 @@
+body{
+    background: rgb(35, 35, 81) !important;
+    font-family: 'Silkscreen'!important;
+    width: 99%;
+}
+
+.white-color{
+    color: white;
+}
+
+.gold-color{
+    color: gold;
+}
+
+.box-1{
+    background-color: #4dff4d;
+}
+
+.box-2{
+    background-color: #ff4d4d;
+}
+
+.box-3{
+    background-color: #ffff66;
+}
+
+.box-4{
+    background-color: #4d4dff;
+}
+
+.box-1-glow{
+    background-color: #ccffcc;
+}
+
+.box-2-glow{
+    background-color: #ffb3b3;
+}
+
+.box-3-glow{
+    background-color: #ffffcc;
+}
+
+.box-4-glow{
+    background-color: #b3b3ff;
+}
+
+.box{
+    width: 200px !important;
+    height: 200px !important;
+    border: 5px black solid !important;
+    border-radius: 50%;
+}
+
+.box:focus {
+    outline: none !important;
+}
+
+.cog-icon:hover {
+    cursor: pointer;
+}
+
+/* Modal */
+/* The Modal (background) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    top: 420px !important;
+    left: 20px !important;
+    width: 22% !important; 
+    height: 40% !important;
+  }
+  
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    width: 100%;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaa;
+    padding-left: 35px;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .show {
+    display: block !important;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }

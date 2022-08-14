@@ -1,0 +1,270 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says</title>
+    
+    <link rel="stylesheet" href="styles.css">
+    <link href='https://fonts.googleapis.com/css?family=Silkscreen' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" 
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="d-flex justify-content-center p-5" style="height: 20%;">
+        <p class="h2 white-color">Press A to Start</p>
+    </div>
+
+    <div>
+        <div class="row" style="height: 30%; padding: 40px;">
+            <div class="col d-flex justify-content-end align-items-center">
+                <button class="box-1 box" id="box-1"></button>
+            </div>
+            <div class="col d-flex justify-content-start align-items-center">
+                <button class="box-2 box" id="box-2"></button>
+            </div>
+        </div>
+        <div class="row" style="height: 30%; padding: 40px;">
+            <div class="col d-flex justify-content-end align-items-center">
+                <button class="box-3 box" id="box-3"></button>
+            </div>
+            <div class="col d-flex justify-content-start align-items-center">
+                <button class="box-4 box" id="box-4"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-start align-items-end" style="height: 20%;">
+        <i class="fa fa-cog fa-2x white-color pb-4 pt-4 pl-4 cog-icon" onclick="popModal()"></i>
+        <div id="settings" class="modal">
+            <div class="modal-content">
+                <div class="d-flex justify-content-start">
+                    <p class="h4">Game Difficulty</p>
+                    <span id="close" class="close">&times;</span>
+                </div>
+                <div class="pt-4">
+                    <input type="radio" name="game-diff" id="easy" onclick="setDifficulty(1)" class="pr-2">
+                    <label for="easy">Easy</label><br>
+                    <input type="radio" name="game-diff" id="normal" onclick="setDifficulty(2)" class="pr-2">
+                    <label for="normal">Normal</label><br>
+                    <input type="radio" name="game-diff" id="hard" onclick="setDifficulty(3)" class="pr-2">
+                    <label for="hard">Hard</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let difficultyLevel = 1;
+        let simonPrompts = [];
+        let levelCount = 1;
+        let correctPresses = 0;
+        const difficultyArray = ['Easy','Normal','Hard'];
+
+        let itemClick = new Audio("assets/sound.wav");
+        let roundComplete = new Audio("assets/round-won.wav");
+        let gameOver = new Audio("assets/game-over.wav");
+
+        let mainText = document.querySelector("p");
+        let box1 = document.getElementById("box-1");
+        let box2 = document.getElementById("box-2");
+        let box3 = document.getElementById("box-3");
+        let box4 = document.getElementById("box-4");
+
+        document.addEventListener("keypress", (event) => {
+            if (event.key == "a" || event.key == "A") {
+                startGame()
+            }
+        });
+
+        document.getElementById("close").addEventListener("click", (event) => {
+            document.getElementById("settings").classList.toggle("show");
+        });
+
+        function startGame(){            
+            simonPrompts = []
+            levelCount = 1
+            mainText.classList.remove("white-color")
+            mainText.classList.add("gold-color")
+            promptUser()
+        }
+
+        function promptUser(){
+            mainText.innerHTML = `Level ${levelCount}`
+            correctPresses = 0
+
+            for (let i = 0; i < difficultyLevel; i++){
+                simonPrompts.push(Math.floor(Math.random()*4)+1);
+            }
+            
+            simonPrompts.forEach((element,index)=> {
+                setTimeout(function(){
+                    itemClick.play();
+                    switch(element){
+                        case 1:
+                            box1.classList.toggle("box-1-glow")
+                            setTimeout(function(){
+                                box1.classList.toggle('box-1-glow'); 
+                            },1000);
+                            break;
+                        case 2:
+                            box2.classList.toggle("box-2-glow")
+                            setTimeout(function(){
+                                box2.classList.toggle('box-2-glow'); 
+                            },1000);
+                            break;
+                        case 3:
+                            box3.classList.toggle("box-3-glow")
+                            setTimeout(function(){
+                                box3.classList.toggle('box-3-glow'); 
+                            },1000);
+                            break;
+                        case 4:
+                            box4.classList.toggle("box-4-glow")
+                            setTimeout(function(){
+                                box4.classList.toggle('box-4-glow'); 
+                            },1000);
+                            break;
+                    }
+                },1500*index);
+            });
+
+            enableButtons()
+        }
+
+        function enableButtons(){
+            box1.addEventListener("click",activateBtnOne);
+            box2.addEventListener("click",activateBtnTwo);
+            box3.addEventListener("click",activateBtnThree);
+            box4.addEventListener("click",activateBtnFour);
+        }
+
+        function disableButtons(){
+            box1.removeEventListener("click",activateBtnOne);
+            box2.removeEventListener("click",activateBtnTwo);
+            box3.removeEventListener("click",activateBtnThree);
+            box4.removeEventListener("click",activateBtnFour);
+        }
+
+        function gameOverUpdates(){
+            mainText.classList.remove("gold-color")
+            mainText.classList.add("white-color")
+            mainText.innerHTML = `Reached level ${levelCount} on ${difficultyArray[difficultyLevel-1]} mode<br> Game over. Press A to play again!`
+        }
+
+        function activateBtnOne(){
+            itemClick.play()
+            box1.classList.toggle("box-1-glow")
+            setTimeout(function(){
+                box1.classList.toggle('box-1-glow'); 
+            },100);
+
+            if (simonPrompts[correctPresses] == 1){
+                correctPresses++
+
+                if (simonPrompts.length == correctPresses){
+                    levelCount++
+                    disableButtons()
+                    roundComplete.play()
+                    setTimeout(function(){
+                        promptUser()
+                    },2000);
+                }           
+            }else{
+                disableButtons()
+                gameOverUpdates()
+                gameOver.play()
+            }
+        }
+
+        function activateBtnTwo(){
+            itemClick.play()
+            box2.classList.toggle("box-2-glow")
+            setTimeout(function(){
+                box2.classList.toggle('box-2-glow'); 
+            },100);
+
+            if (simonPrompts[correctPresses] == 2){
+                correctPresses++
+
+                if (simonPrompts.length == correctPresses){
+                    levelCount++
+                    disableButtons()
+                    roundComplete.play()
+                    setTimeout(function(){
+                        promptUser()
+                    },2000);
+                }           
+            }else{
+                disableButtons()
+                gameOverUpdates()
+                gameOver.play()
+            }
+        }
+
+        function activateBtnThree(){
+            itemClick.play()
+            box3.classList.toggle("box-3-glow")
+            setTimeout(function(){
+                box3.classList.toggle('box-3-glow'); 
+            },100);
+
+            if (simonPrompts[correctPresses] == 3){
+                correctPresses++
+
+                if (simonPrompts.length == correctPresses){
+                    levelCount++
+                    disableButtons()
+                    roundComplete.play()
+                    setTimeout(function(){
+                        promptUser()
+                    },2000);
+                }           
+            }else{
+                disableButtons()
+                gameOverUpdates()
+                gameOver.play()
+            }
+        }
+
+        function activateBtnFour(){
+            itemClick.play()
+            box4.classList.toggle("box-4-glow")
+            setTimeout(function(){
+                box4.classList.toggle('box-4-glow'); 
+            },100);
+
+            if (simonPrompts[correctPresses] == 4){
+                correctPresses++
+
+                if (simonPrompts.length == correctPresses){
+                    levelCount++
+                    disableButtons()
+                    roundComplete.play()
+                    setTimeout(function(){
+                        promptUser()
+                    },2000);
+                }           
+            }else{
+                disableButtons()
+                gameOverUpdates()
+                gameOver.play()
+            }
+        }
+
+        function popModal(){
+            document.getElementById("settings").classList.toggle("show");
+        }
+
+        function setDifficulty(difficultySelection){
+            difficultyLevel = difficultySelection;
+            document.getElementById("settings").classList.toggle("show");
+            disableButtons()
+            startGame()
+        }
+
+    </script>
+</body>
+</html>
